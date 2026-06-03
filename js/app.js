@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const modSubmitBtn = document.getElementById('modSubmitBtn');
     const modMessage = document.getElementById('modMessage');
 
+    const resultLogo = document.getElementById('resultLogo');
+
     function getWinnerName() {
         const urlParams = new URLSearchParams(window.location.search);
         const encodedWinner = urlParams.get('input') || '';
@@ -43,8 +45,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!winner) return;
 
         const encodedWinner = btoa(winner);
-        modMessage.textContent = `The winner has been configured to be ${winner}`;
+        modMessage.textContent = `The winner has been configured to be: ${winner}`;
         modMessage.classList.remove('hidden');
+
+        // Grey out input and button
+        winnerInput.disabled = true;
+        modSubmitBtn.disabled = true;
+        winnerInput.style.opacity = '0.5';
+        modSubmitBtn.style.opacity = '0.5';
+        modSubmitBtn.style.cursor = 'not-allowed';
 
         setTimeout(() => {
             window.location.href = `${window.location.pathname}?input=${encodedWinner}`;
@@ -59,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         appScreen.classList.add('hidden');
         resultScreen.classList.remove('hidden');
         resultScreen.classList.remove('win', 'lose');
+        resultLogo.classList.remove('hidden');
         pauseEffect.classList.remove('hidden');
         resultContent.classList.add('hidden');
 
@@ -69,8 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (enteredName === winnerName && winnerName !== '') {
                 resultScreen.classList.add('win');
+                resultLogo.classList.add('hidden');
             } else {
                 resultScreen.classList.add('lose');
+                resultLogo.classList.add('hidden');
             }
         }, 3000); // 3 seconds pause
     });
@@ -78,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     backBtn.addEventListener('click', () => {
         resultScreen.classList.add('hidden');
         appScreen.classList.remove('hidden');
+        resultLogo.classList.remove('hidden');
         nameInput.value = '';
     });
 
