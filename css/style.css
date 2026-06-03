@@ -90,7 +90,7 @@ body, html {
   height: 100%;
   background-color: black;
   color: white;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: 'Courier New', Courier, monospace !important;
   overflow: hidden;
 }
 
@@ -112,7 +112,7 @@ body, html {
   position: absolute;
   top: 20px;
   left: 20px;
-  width: 250px; /* 2.5 times the original 100px */
+  width: 300px; /* Twice as large as previous 150px */
   height: auto;
 }
 
@@ -138,7 +138,7 @@ body, html {
   border: 1px solid #444;
   border-radius: 4px;
   width: 300px;
-  font-family: inherit;
+  font-family: 'Courier New', Courier, monospace !important;
 }
 
 #submitBtn, #backBtn, #modSubmitBtn {
@@ -149,7 +149,7 @@ body, html {
   color: white;
   border: none;
   border-radius: 4px;
-  font-family: inherit;
+  font-family: 'Courier New', Courier, monospace !important;
 }
 
 #submitBtn:hover, #modSubmitBtn:hover {
