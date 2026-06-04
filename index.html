@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title></title>
-  <link rel="stylesheet" href="css/style.css?v=8">
+  <link rel="stylesheet" href="css/style.css?v=20">
   <meta name="description" content="">
 
   <meta property="og:title" content="">
@@ -24,38 +24,77 @@
 
 <body>
 
+  <button id="homeBtn" class="home-btn">&#8962;</button>
   <div id="moderatorScreen" class="screen">
     <img src="img/logo_widm.jpg" alt="Logo" class="logo">
     <div class="container-vertical">
-      <input type="text" id="winnerInput" placeholder="Enter name">
-      <div class="container">
-        <label><input type="radio" name="mode" value="winner" checked> Winner</label>
-        <label><input type="radio" name="mode" value="loser"> Loser</label>
+      <div class="config-section flex-row">
+        <h3>1. Winner/Loser Mode</h3>
+        <div class="container">
+          <label><input type="radio" name="mode" value="winner" checked> Winner</label>
+          <label><input type="radio" name="mode" value="loser"> Loser</label>
+        </div>
       </div>
+      <hr class="section-divider">
+
+      <div class="config-section flex-row">
+        <h3>2. Execution Mode</h3>
+        <div class="container">
+          <label><input type="radio" name="execMode" value="manual" checked> Manual Entry</label>
+          <label><input type="radio" name="execMode" value="sequence"> Sequence</label>
+        </div>
+      </div>
+
+      <div id="manualConfig" class="config-section flex-row">
+        <h3 class="highlight-white">Winner/Loser Name</h3>
+        <input type="text" id="winnerInput" placeholder="Enter name">
+      </div>
+
+      <div id="sequenceConfig" class="config-section hidden">
+        <h3 class="highlight-white">Name List & Target</h3>
+        <p style="font-size: 12px; color: #888;">Enter names (one per line). Mark target with * (e.g. Tim*)</p>
+        <textarea id="nameListInput" placeholder="Enter names, one per line"></textarea>
+      </div>
+      <hr class="section-divider">
+
+      <div class="config-section flex-row">
+        <h3>3. Pause Duration (s)</h3>
+        <input type="number" id="pauseTimeInput" value="5" min="0" step="1">
+      </div>
+      <hr class="section-divider">
+
       <button id="modSubmitBtn">Configure</button>
       <div id="modMessage" class="hidden"></div>
       <div class="info-section">
         <h3>Manual</h3>
-        <p><strong>Winner Mode:</strong> The entered name gets a green screen. Everyone else gets red.</p>
-        <p><strong>Loser Mode:</strong> The entered name gets a red screen. Everyone else gets green.</p>
+        <p><strong>Winner/Loser Mode:</strong> <strong-white>Winner Mode:</strong-white> The target name gets a green screen. Everyone else gets red. <strong-white>Loser Mode:</strong-white> The target name gets a red screen. Everyone else gets green.</p>
+        <p><strong>Execution Mode:</strong> <strong-white>Manual Entry:</strong-white> Participant names are entered by the moderator during execution. <strong-white>Sequence:</strong-white> A list of pre-configured names is shown one by one in order.</p>
+        <p><strong>Pause Duration:</strong> The time in seconds the "dots" are shown before revealing the result.</p>
       </div>
     </div>
   </div>
 
   <div id="app" class="screen initial hidden">
     <img src="img/logo_widm.jpg" alt="Logo" class="logo">
-    <div class="container">
-      <input type="text" id="nameInput" placeholder="Enter name">
-      <button id="submitBtn">&#10141;</button>
+    <div class="container-vertical">
+      <div id="manualInputArea" class="container">
+        <input type="text" id="nameInput" placeholder="Enter name">
+        <button id="submitBtn">&#10141;</button>
+      </div>
+      <div id="sequenceStartArea" class="hidden">
+        <button id="startExecBtn">START EXECUTION</button>
+      </div>
     </div>
   </div>
 
   <div id="resultScreen" class="screen hidden">
     <img src="img/logo_widm.jpg" alt="Logo" class="logo" id="resultLogo">
     <div class="container-vertical">
+      <div id="displayName" class="name-display hidden"></div>
       <div id="pauseEffect" class="hidden">...</div>
       <div id="resultContent" class="hidden">
         <button id="backBtn">Return</button>
+        <button id="nextBtn" class="hidden">Next</button>
       </div>
     </div>
   </div>

@@ -12,99 +12,201 @@ document.addEventListener('DOMContentLoaded', () => {
     const modSubmitBtn = document.getElementById('modSubmitBtn');
     const modMessage = document.getElementById('modMessage');
 
-    const resultLogo = document.getElementById('resultLogo');
+    const execModeRadios = document.getElementsByName('execMode');
+    const manualConfig = document.getElementById('manualConfig');
+    const sequenceConfig = document.getElementById('sequenceConfig');
+    const nameListInput = document.getElementById('nameListInput');
+    const pauseTimeInput = document.getElementById('pauseTimeInput');
 
-    function getWinnerName() {
+    const manualInputArea = document.getElementById('manualInputArea');
+    const sequenceStartArea = document.getElementById('sequenceStartArea');
+    const startExecBtn = document.getElementById('startExecBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const displayName = document.getElementById('displayName');
+    const homeBtn = document.getElementById('homeBtn');
+
+    let sequenceNames = [];
+    let currentSequenceIndex = 0;
+
+    function getParams() {
         const urlParams = new URLSearchParams(window.location.search);
         const encodedWinner = urlParams.get('input') || '';
-        try {
-            return atob(encodedWinner).toLowerCase();
-        } catch (e) {
-            console.error('Failed to decode base64', e);
-            return '';
-        }
-    }
+        const encodedNames = urlParams.get('names') || '';
+        const mode = urlParams.get('mode') || 'winner';
+        const execMode = urlParams.get('execMode') || 'manual';
+        const pauseTime = parseInt(urlParams.get('pause') || '5', 10) * 1000;
 
-    function getMode() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('mode') || 'winner';
+        let winnerName = '';
+        try {
+            winnerName = encodedWinner ? atob(encodedWinner).toLowerCase() : '';
+        } catch (e) { console.error('Failed to decode winner', e); }
+
+        let namesList = [];
+        try {
+            namesList = encodedNames ? JSON.parse(atob(encodedNames)) : [];
+        } catch (e) { console.error('Failed to decode names', e); }
+
+        return { winnerName, namesList, mode, execMode, pauseTime };
     }
 
     function init() {
-        const path = window.location.pathname;
         const urlParams = new URLSearchParams(window.location.search);
-        const hasInput = urlParams.has('input');
-        const winnerName = getWinnerName();
+        const { execMode, namesList } = getParams();
 
-        if (path.includes('/execution') || hasInput || winnerName) {
+        if (urlParams.has('input') || urlParams.has('names')) {
             moderatorScreen.classList.add('hidden');
             appScreen.classList.remove('hidden');
+
+            if (execMode === 'sequence') {
+                manualInputArea.classList.add('hidden');
+                sequenceStartArea.classList.remove('hidden');
+                sequenceNames = namesList;
+            } else {
+                manualInputArea.classList.remove('hidden');
+                sequenceStartArea.classList.add('hidden');
+            }
         } else {
             moderatorScreen.classList.remove('hidden');
             appScreen.classList.add('hidden');
         }
     }
 
+    // Moderator Screen Logic
+    execModeRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value === 'manual') {
+                manualConfig.classList.remove('hidden');
+                sequenceConfig.classList.add('hidden');
+            } else {
+                manualConfig.classList.add('hidden');
+                sequenceConfig.classList.remove('hidden');
+            }
+        });
+    });
+
     modSubmitBtn.addEventListener('click', () => {
-        const winner = winnerInput.value.trim();
-        if (!winner) return;
-
+        const execMode = document.querySelector('input[name="execMode"]:checked').value;
         const mode = document.querySelector('input[name="mode"]:checked').value;
-        const encodedWinner = btoa(winner);
-        modMessage.textContent = `The ${mode} has been configured to be: ${winner}`;
-        modMessage.classList.remove('hidden');
+        const pauseTime = pauseTimeInput.value || '5';
+        let url = `${window.location.pathname}?execMode=${execMode}&mode=${mode}&pause=${pauseTime}`;
 
-        // Grey out input and button
+        if (execMode === 'manual') {
+            const winner = winnerInput.value.trim();
+            if (!winner) return;
+            url += `&input=${btoa(winner)}`;
+            modMessage.textContent = `The ${mode} has been configured to be: ${winner}`;
+        } else {
+            const namesText = nameListInput.value.trim();
+            if (!namesText) return;
+            const names = namesText.split('\n').map(n => n.trim()).filter(n => n);
+            url += `&names=${btoa(JSON.stringify(names))}`;
+            modMessage.textContent = `Sequence with ${names.length} names configured.`;
+        }
+
+        modMessage.classList.remove('hidden');
         winnerInput.disabled = true;
+        nameListInput.disabled = true;
+        pauseTimeInput.disabled = true;
         modSubmitBtn.disabled = true;
         document.querySelectorAll('input[name="mode"]').forEach(el => el.disabled = true);
-        winnerInput.style.opacity = '0.5';
-        modSubmitBtn.style.opacity = '0.5';
-        modSubmitBtn.style.cursor = 'not-allowed';
+        document.querySelectorAll('input[name="execMode"]').forEach(el => el.disabled = true);
 
         setTimeout(() => {
-            window.location.href = `${window.location.pathname}?input=${encodedWinner}&mode=${mode}`;
+            window.location.href = url;
         }, 1500);
     });
 
-    submitBtn.addEventListener('click', () => {
-        const enteredName = nameInput.value.trim().toLowerCase();
-        const winnerName = getWinnerName();
+    // Execution Logic
+    function runExecution(nameToDisplay, isTarget) {
+        const { mode, pauseTime } = getParams();
 
-        // Show result screen and pause effect
         appScreen.classList.add('hidden');
         resultScreen.classList.remove('hidden');
         resultScreen.classList.remove('win', 'lose');
         pauseEffect.classList.remove('hidden');
         resultContent.classList.add('hidden');
+        displayName.classList.add('hidden');
 
-        // Pause effect (vibe)
         setTimeout(() => {
             pauseEffect.classList.add('hidden');
             resultContent.classList.remove('hidden');
 
-            const mode = getMode();
-            const isMatch = (enteredName === winnerName && winnerName !== '');
+            if (nameToDisplay) {
+                displayName.textContent = nameToDisplay;
+                displayName.classList.remove('hidden');
+            }
 
-            let isWinner;
+            let isWin;
             if (mode === 'loser') {
-                isWinner = !isMatch;
+                isWin = !isTarget;
             } else {
-                isWinner = isMatch;
+                isWin = isTarget;
             }
 
-            if (isWinner) {
-                resultScreen.classList.add('win');
+            resultScreen.classList.add(isWin ? 'win' : 'lose');
+
+            const { execMode } = getParams();
+            if (execMode === 'sequence') {
+                backBtn.classList.add('hidden');
+                nextBtn.classList.remove('hidden');
+                if (currentSequenceIndex >= sequenceNames.length) {
+                    nextBtn.textContent = 'END';
+                } else {
+                    nextBtn.textContent = 'Next';
+                }
             } else {
-                resultScreen.classList.add('lose');
+                backBtn.classList.remove('hidden');
+                nextBtn.classList.add('hidden');
             }
-        }, 3000); // 3 seconds pause
+        }, pauseTime);
+    }
+
+    submitBtn.addEventListener('click', () => {
+        const enteredName = nameInput.value.trim().toLowerCase();
+        const { winnerName } = getParams();
+        const isTarget = (enteredName === winnerName && winnerName !== '');
+        runExecution('', isTarget);
     });
 
+    startExecBtn.addEventListener('click', () => {
+        currentSequenceIndex = 0;
+        showNextInSequence();
+    });
+
+    nextBtn.addEventListener('click', () => {
+        if (currentSequenceIndex >= sequenceNames.length) {
+            // END screen
+            displayName.textContent = 'END';
+            resultScreen.classList.remove('win', 'lose');
+            nextBtn.classList.add('hidden');
+            backBtn.classList.remove('hidden');
+            backBtn.textContent = 'Restart';
+            backBtn.onclick = () => window.location.reload();
+        } else {
+            showNextInSequence();
+        }
+    });
+
+    function showNextInSequence() {
+        const rawName = sequenceNames[currentSequenceIndex];
+        const isTarget = rawName.endsWith('*');
+        const cleanName = isTarget ? rawName.slice(0, -1) : rawName;
+        currentSequenceIndex++;
+        runExecution(cleanName, isTarget);
+    }
+
     backBtn.addEventListener('click', () => {
+        if (backBtn.textContent === 'Restart') {
+             window.location.reload();
+             return;
+        }
         resultScreen.classList.add('hidden');
         appScreen.classList.remove('hidden');
         nameInput.value = '';
+    });
+
+    homeBtn.addEventListener('click', () => {
+        window.location.href = window.location.pathname;
     });
 
     init();
