@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title></title>
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=8">
   <meta name="description" content="">
 
   <meta property="og:title" content="">
@@ -27,9 +27,18 @@
   <div id="moderatorScreen" class="screen">
     <img src="img/logo_widm.jpg" alt="Logo" class="logo">
     <div class="container-vertical">
-      <input type="text" id="winnerInput" placeholder="Enter winner name">
+      <input type="text" id="winnerInput" placeholder="Enter name">
+      <div class="container">
+        <label><input type="radio" name="mode" value="winner" checked> Winner</label>
+        <label><input type="radio" name="mode" value="loser"> Loser</label>
+      </div>
       <button id="modSubmitBtn">Configure</button>
       <div id="modMessage" class="hidden"></div>
+      <div class="info-section">
+        <h3>Manual</h3>
+        <p><strong>Winner Mode:</strong> The entered name gets a green screen. Everyone else gets red.</p>
+        <p><strong>Loser Mode:</strong> The entered name gets a red screen. Everyone else gets green.</p>
+      </div>
     </div>
   </div>
 
@@ -44,7 +53,7 @@
   <div id="resultScreen" class="screen hidden">
     <img src="img/logo_widm.jpg" alt="Logo" class="logo" id="resultLogo">
     <div class="container-vertical">
-      <div id="pauseEffect" class="hidden">EXECUTIE</div>
+      <div id="pauseEffect" class="hidden">...</div>
       <div id="resultContent" class="hidden">
         <button id="backBtn">Return</button>
       </div>

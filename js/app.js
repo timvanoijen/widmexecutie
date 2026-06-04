@@ -25,6 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function getMode() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('mode') || 'winner';
+    }
+
     function init() {
         const path = window.location.pathname;
         const urlParams = new URLSearchParams(window.location.search);
@@ -44,19 +49,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const winner = winnerInput.value.trim();
         if (!winner) return;
 
+        const mode = document.querySelector('input[name="mode"]:checked').value;
         const encodedWinner = btoa(winner);
-        modMessage.textContent = `The winner has been configured to be: ${winner}`;
+        modMessage.textContent = `The ${mode} has been configured to be: ${winner}`;
         modMessage.classList.remove('hidden');
 
         // Grey out input and button
         winnerInput.disabled = true;
         modSubmitBtn.disabled = true;
+        document.querySelectorAll('input[name="mode"]').forEach(el => el.disabled = true);
         winnerInput.style.opacity = '0.5';
         modSubmitBtn.style.opacity = '0.5';
         modSubmitBtn.style.cursor = 'not-allowed';
 
         setTimeout(() => {
-            window.location.href = `${window.location.pathname}?input=${encodedWinner}`;
+            window.location.href = `${window.location.pathname}?input=${encodedWinner}&mode=${mode}`;
         }, 1500);
     });
 
@@ -76,7 +83,17 @@ document.addEventListener('DOMContentLoaded', () => {
             pauseEffect.classList.add('hidden');
             resultContent.classList.remove('hidden');
 
-            if (enteredName === winnerName && winnerName !== '') {
+            const mode = getMode();
+            const isMatch = (enteredName === winnerName && winnerName !== '');
+
+            let isWinner;
+            if (mode === 'loser') {
+                isWinner = !isMatch;
+            } else {
+                isWinner = isMatch;
+            }
+
+            if (isWinner) {
                 resultScreen.classList.add('win');
             } else {
                 resultScreen.classList.add('lose');
