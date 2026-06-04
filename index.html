@@ -29,7 +29,7 @@
     <img src="img/logo_widm.jpg" alt="Logo" class="logo">
     <div class="container-vertical">
       <div class="config-section flex-row">
-        <h3>1. Winnaar/Verliezer Modus</h3>
+        <h3>1. Winnaar-/verliezer-modus</h3>
         <div class="container">
           <label><input type="radio" name="mode" value="winner" checked> Winnaar</label>
           <label><input type="radio" name="mode" value="loser"> Verliezer</label>
@@ -38,7 +38,7 @@
       <hr class="section-divider">
 
       <div class="config-section flex-row">
-        <h3>2. Executie Modus</h3>
+        <h3>2. Executiemodus</h3>
         <div class="container">
           <label><input type="radio" name="execMode" value="manual" checked> Handmatig</label>
           <label><input type="radio" name="execMode" value="sequence"> Automatisch</label>
@@ -46,7 +46,7 @@
       </div>
 
       <div id="manualConfig" class="config-section flex-row">
-        <h3 class="highlight-white">Winnaar/Verliezer Naam</h3>
+        <h3 class="highlight-white">Doelwit</h3>
         <input type="text" id="winnerInput" placeholder="Voer naam in">
       </div>
 
@@ -58,18 +58,18 @@
       <hr class="section-divider">
 
       <div class="config-section flex-row">
-        <h3>3. Pauze Duur (s)</h3>
+        <h3>3. Pauzeduur (s)</h3>
         <input type="number" id="pauseTimeInput" value="5" min="0" step="1">
       </div>
       <hr class="section-divider">
 
-      <button id="modSubmitBtn">Configureren</button>
+      <button id="modSubmitBtn">CONFIGUREREN</button>
       <div id="modMessage" class="hidden"></div>
       <div class="info-section">
         <h3>Handleiding</h3>
-        <p><strong>Winnaar/Verliezer Modus:</strong> <strong-white>Winnaar Modus:</strong-white> De doelnaam krijgt een groen scherm. De rest krijgt rood. <strong-white>Verliezer Modus:</strong-white> De doelnaam krijgt een rood scherm. De rest krijgt groen.</p>
-        <p><strong>Executie Modus:</strong> <strong-white>Handmatig:</strong-white> Deelnemersnamen worden door de moderator ingevoerd tijdens de executie. <strong-white>Automatisch:</strong-white> Een lijst met vooraf geconfigureerde namen wordt één voor één getoond.</p>
-        <p><strong>Pauze Duur:</strong> De tijd in seconden dat de "punten" worden getoond voordat het resultaat wordt onthuld.</p>
+        <p><strong>Winnaar-/verliezer-modus:</strong> <strong-white>Winnaar:</strong-white> De doelnaam krijgt een groen scherm. De rest krijgt rood. <strong-white>Verliezer:</strong-white> De doelnaam krijgt een rood scherm. De rest krijgt groen.</p>
+        <p><strong>Executiemodus:</strong> <strong-white>Handmatig:</strong-white> Deelnemersnamen worden door de moderator ingevoerd tijdens de executie. <strong-white>Automatisch:</strong-white> Een lijst met vooraf geconfigureerde namen wordt één voor één getoond.</p>
+        <p><strong>Pauzeduur:</strong> De wachttijd in seconden voordat het resultaat wordt onthuld.</p>
       </div>
     </div>
   </div>
@@ -93,8 +93,8 @@
       <div id="displayName" class="name-display hidden"></div>
       <div id="pauseEffect" class="hidden">...</div>
       <div id="resultContent" class="hidden">
-        <button id="backBtn">Terug</button>
-        <button id="nextBtn" class="hidden">Volgende</button>
+        <button id="backBtn">TERUG</button>
+        <button id="nextBtn" class="hidden">VOLGENDE</button>
       </div>
     </div>
   </div>
