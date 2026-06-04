@@ -94,13 +94,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const winner = winnerInput.value.trim();
             if (!winner) return;
             url += `&input=${btoa(winner)}`;
-            modMessage.textContent = `The ${mode} has been configured to be: ${winner}`;
+            modMessage.textContent = `De ${mode === 'winner' ? 'winnaar' : 'verliezer'} is geconfigureerd als: ${winner}`;
         } else {
             const namesText = nameListInput.value.trim();
             if (!namesText) return;
             const names = namesText.split('\n').map(n => n.trim()).filter(n => n);
             url += `&names=${btoa(JSON.stringify(names))}`;
-            modMessage.textContent = `Sequence with ${names.length} names configured.`;
+            modMessage.textContent = `Volgorde met ${names.length} namen geconfigureerd.`;
         }
 
         modMessage.classList.remove('hidden');
@@ -150,9 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 backBtn.classList.add('hidden');
                 nextBtn.classList.remove('hidden');
                 if (currentSequenceIndex >= sequenceNames.length) {
-                    nextBtn.textContent = 'END';
+                    nextBtn.textContent = 'EINDE';
                 } else {
-                    nextBtn.textContent = 'Next';
+                    nextBtn.textContent = 'Volgende';
                 }
             } else {
                 backBtn.classList.remove('hidden');
@@ -176,11 +176,11 @@ document.addEventListener('DOMContentLoaded', () => {
     nextBtn.addEventListener('click', () => {
         if (currentSequenceIndex >= sequenceNames.length) {
             // END screen
-            displayName.textContent = 'END';
+            displayName.textContent = 'EINDE';
             resultScreen.classList.remove('win', 'lose');
             nextBtn.classList.add('hidden');
             backBtn.classList.remove('hidden');
-            backBtn.textContent = 'Restart';
+            backBtn.textContent = 'Opnieuw';
             backBtn.onclick = () => window.location.reload();
         } else {
             showNextInSequence();
@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     backBtn.addEventListener('click', () => {
-        if (backBtn.textContent === 'Restart') {
+        if (backBtn.textContent === 'Opnieuw') {
              window.location.reload();
              return;
         }
